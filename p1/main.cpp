@@ -56,7 +56,7 @@ void my_mouse(int button, int state, int x, int y)
     }
 }
 
-void keyboard(unsigned char key, int x, int y)
+void keyboard( char key, int x, int y)
 {
     if(key == 'a'){
         dir = 1;
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
 
-    glutSpecialFunc(special);
+    glutSpecialFunc(keyboard);
     init();
     glutMainLoop();
 }
