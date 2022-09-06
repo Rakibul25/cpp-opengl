@@ -1,6 +1,5 @@
 # depslib dependency file v1.0
-1662478432 source:f:\uni\16smstr\cglab\p1\main.cpp
-	<GLUT/glut.h>
+1662479166 source:f:\uni\16smstr\cglab\p1\main.cpp
 	<GL/glut.h>
 	<math.h>
 
