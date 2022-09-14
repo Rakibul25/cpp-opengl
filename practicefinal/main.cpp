@@ -7,70 +7,98 @@ int dir1 = 1;
 
 float p = 0;
 float q = 0;
-void display()
+
+void rectangle()
+{
+    glBegin(GL_POLYGON);
+    glVertex2f(0, 0);
+    glVertex2f(3, 0);
+    glVertex2f(3, 3);
+    glVertex2f(0, 3);
+    glEnd();
+}
+
+void body()
+{
+    glBegin(GL_POLYGON);
+    glVertex2f(15, 15);
+    glVertex2f(40, 15);
+    glVertex2f(40, 25);
+    glVertex2f(15, 25);
+    glEnd();
+}
+
+void circle()
 {
     float angle;
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-
-    //glPointSize(15);
-    glPushMatrix();
-    glTranslatef(p, 0, 0);
     glBegin(GL_POLYGON);
     for(int i = 0; i<360; i++)
     {
         angle = i*3.1416/180;
-        glVertex2f(x+cos(angle)*2, 25+y+sin(angle)*2);
+        glVertex2f(2*cos(angle), 2*sin(angle));
     }
     glEnd();
+}
 
-    glPopMatrix();
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+
+    glColor3f(1, 0, 0);
+    body();
+
+
+
     glPushMatrix();
-    glTranslatef(0, q, 0);
-    glBegin(GL_POLYGON);
-    glVertex2f(0, 0);
-    glVertex2f(10, 0);
-    glVertex2f(10, 10);
-    glVertex2f(0, 10);
-    glEnd();
-
+    glColor3f(1, 1, 1);
+    glTranslatef(18, 19, 0);
+    rectangle();
     glPopMatrix();
 
-    if(dir==1){
-        if(p<48){
-            p=p+0.01;
-        }
-        else{
-            dir=2;
-        }
-    }
-    else if(dir==2){
-        if(p>2){
-            p=p-0.01;
-        }
-        else{
-            dir=1;
-        }
-    }
+    glPushMatrix();
+    glColor3f(1, 1, 1);
+    glTranslatef(23, 19, 0);
+    rectangle();
+    glPopMatrix();
 
-    if(dir1==1){
-        if(q<40){
-            q=q+0.01;
-        }
-        else{
-            dir1=2;
-        }
-    }
-    else if(dir1==2){
-        if(q>0){
-            q=q-0.01;
-        }
-        else{
-            dir1=1;
-        }
-    }
+    glPushMatrix();
+    glColor3f(1, 1, 1);
+    glTranslatef(28, 19, 0);
+    rectangle();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3f(1, 1, 1);
+    glTranslatef(33, 19, 0);
+    rectangle();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3f(0, 1, 0);
+    glTranslatef(20, 15, 0);
+    circle();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3f(0, 1, 0);
+    glTranslatef(35, 15, 0);
+    circle();
+    glPopMatrix();
+
+    //glColor3f(1, 1, 1);
+    //top();
+
+    glPushMatrix();
+    glColor3f(1, 1,1);
+    glScalef(0.7, 0.5, 0);
+    glTranslatef(12, 35, 0);
+    body();
+    glPopMatrix();
+
+
     glFlush();
-    glutPostRedisplay();
+
 }
 
 void reshape(int h, int w)
@@ -123,3 +151,4 @@ int main (int argc, char *argv[])
     //glutTimerFunc(0, timer, 0);
     glutMainLoop();
 }
+
