@@ -1,154 +1,160 @@
+#include<GL/glu.h>
 #include<GL/glut.h>
-#include<math.h>
-float x = 0.5;
-float y = 0.5;
-int dir = 1;
-int dir1 = 1;
+#include<GL/gl.h>
+#include<stdio.h>
 
-float p = 0;
-float q = 0;
+#define window_height 600
+#define window_width 600
 
-void rectangle()
+void init()
 {
-    glBegin(GL_POLYGON);
-    glVertex2f(0, 0);
-    glVertex2f(3, 0);
-    glVertex2f(3, 3);
-    glVertex2f(0, 3);
-    glEnd();
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-1,1,-1,1,2,10);
+    glMatrixMode(GL_MODELVIEW);
 }
 
-void body()
+void face (float A[], float B[], float C[], float D[])
 {
     glBegin(GL_POLYGON);
-    glVertex2f(15, 15);
-    glVertex2f(40, 15);
-    glVertex2f(40, 25);
-    glVertex2f(15, 25);
+      glVertex3f(A[0], A[1], A[2]); ///glVertex3fv(A) [Array]
+      glVertex3fv(B);
+      glVertex3fv(C);
+      glVertex3fv(D);
     glEnd();
+
 }
 
-void circle()
+void cube(float V0[],float V1[],float V2[],float V3[],float V4[],float V5[],float V6[], float V7[] )
 {
-    float angle;
-    glBegin(GL_POLYGON);
-    for(int i = 0; i<360; i++)
-    {
-        angle = i*3.1416/180;
-        glVertex2f(2*cos(angle), 2*sin(angle));
-    }
-    glEnd();
+    ///Front(0,1,2,3) Red
+    glColor3f(1.0,0.0,0.0);
+    face(V0,V1,V2,V3);
+    ///Back (4,5,6,7) Green
+    glColor3f(0.0,1.0,0.0);
+    face(V4,V5,V6,V7);
+    ///Left (4,0,3,7)
+    glColor3f(0.0,0.0,1.0);
+    face(V4,V0,V3,V7);
+    ///Right (5,1,2,6)
+    glColor3f(1.0,1.0,0.0);
+    face(V5,V1,V2,V6);
+    ///Bottom (7,6,2,3)
+    glColor3f(0.0,1.0,1.0);
+    face(V7,V6,V2,V3);
+    ///Top (5,1,0,4)
+    glColor3f(1.0,0.0,1.0);
+    face(V5,V1,V0,V4);
+}
+
+float T =0.0;
+float Cx=0.0, Cy=0.0, Cz=3.0;
+void spin ()
+{
+    T+=0.01;
+       if(T>360)
+           T=0;
+    glutPostRedisplay();
 }
 
 void display()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    float V[8][3]={
+        {-0.5,0.5,0.5},
+        {0.5,0.5,0.5},
+        {0.5,-0.5,0.5},
+        {-0.5,-0.5,0.5},
+
+        {-0.5,0.5,-0.5},
+        {0.5,0.5,-0.5},
+        {0.5,-0.5,-0.5},
+        {-0.5,-0.5,-0.5},
+    };
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //Draw A cube and Spin it
     glLoadIdentity();
-
-    glColor3f(1, 0, 0);
-    body();
-
-
-
-    glPushMatrix();
-    glColor3f(1, 1, 1);
-    glTranslatef(18, 19, 0);
-    rectangle();
-    glPopMatrix();
-
-    glPushMatrix();
-    glColor3f(1, 1, 1);
-    glTranslatef(23, 19, 0);
-    rectangle();
-    glPopMatrix();
-
-    glPushMatrix();
-    glColor3f(1, 1, 1);
-    glTranslatef(28, 19, 0);
-    rectangle();
-    glPopMatrix();
-
-    glPushMatrix();
-    glColor3f(1, 1, 1);
-    glTranslatef(33, 19, 0);
-    rectangle();
-    glPopMatrix();
-
-    glPushMatrix();
-    glColor3f(0, 1, 0);
-    glTranslatef(20, 15, 0);
-    circle();
-    glPopMatrix();
-
-    glPushMatrix();
-    glColor3f(0, 1, 0);
-    glTranslatef(35, 15, 0);
-    circle();
-    glPopMatrix();
-
-    //glColor3f(1, 1, 1);
-    //top();
-
-    glPushMatrix();
-    glColor3f(1, 1,1);
-    glScalef(0.7, 0.5, 0);
-    glTranslatef(12, 35, 0);
-    body();
-    glPopMatrix();
+    gluLookAt(Cx,Cy,Cz,0,0,0,0,1,0);
+    glRotatef(T,1,1,0);
+    cube(V[0],V[1],V[2],V[3],V[4],V[5],V[6],V[7]);
 
 
-    glFlush();
 
+    glutSwapBuffers();
 }
 
-void reshape(int h, int w)
+/*
+void custom_special ()
 {
-    //view port
-    glViewport(0, 0, w, h);
-
-    //projection
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, 50, 0, 50);
-    glMatrixMode(GL_MODELVIEW);
+    //Switch():
+        //Case UP_arrow GlutIdleFunc();
 }
+*/
 
-void init ()
+void custom_keyboard(unsigned char ch, int x, int y)
 {
-    glClearColor(0, 0, 0, 0);
-}
-
-void timer(int)
-{
-    glutPostRedisplay();
-    glutTimerFunc(1000/60.0, timer, 0);
-    if(dir==1)
+    switch(ch)
     {
-        if(x<48){
-            x = x + 0.25;
-        }
-        else
-            dir = 2;
-    }
-    else if(dir == 2){
-        if(x>2){
-            x = x - 0.25;
-        }
-        else
-            dir = 1;
-    }
-}
+        ///We will control the camera Position (Increase or Decrease)
+        ///Decrease in X Coordinate
+    case 'x':
+        Cx-=0.5;
+        printf(" Camera at position: %f %f %f \n", Cx,Cy,Cz);
+        break;
+        ///Increase in X coordinate
+    case 'X':
+        Cx+=0.5;
+        printf(" Camera at position: %f %f %f \n", Cx,Cy,Cz);
+        break;
+        ///Decrease in Y Coordinate
+    case 'y':
+        printf(" Camera at position: %f %f %f \n", Cx,Cy,Cz);
+        Cy-=0.5;
 
-int main (int argc, char *argv[])
+        break;
+        ///Increase in Y coordinate
+    case 'Y':
+        Cy+=0.5;
+        printf(" Camera at position: %f %f %f \n", Cx,Cy,Cz);
+        break;
+
+        ///Decrease in Z Coordinate
+    case 'z':
+        printf(" Camera at position: %f %f %f \n", Cx,Cy,Cz);
+        Cz-=0.5;
+
+        break;
+        ///Increase in Z coordinate
+    case 'Z':
+        Cz+=0.5;
+        printf(" Camera at position: %f %f %f \n", Cx,Cy,Cz);
+        break;
+
+    default:
+        break;
+
+    }
+   glutPostRedisplay();
+
+}
+int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB);
-    glutInitWindowPosition(100, 100);
-    glutInitWindowSize(500, 500);
-    glutCreateWindow("Test1");
+    glutInitWindowPosition(50,50);
+    glutInitWindowSize(window_height,window_width);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
+    glutCreateWindow("3D First Class");
+    init();
     glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
-    //glutTimerFunc(0, timer, 0);
+    glutIdleFunc(spin);
+    glutKeyboardFunc(custom_keyboard);
+
+    //glutSpecialFunc(custom_special);
     glutMainLoop();
+    return 0;
 }
 
