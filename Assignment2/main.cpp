@@ -4,6 +4,7 @@ using namespace std;
 float coordinate[100][2];
 float xmax=0, xmin=0, ymax=50, ymin=35;
 int node;
+float afterclip[10][10];
 
 void left_clipping()
 {
@@ -324,9 +325,9 @@ void print()
 void setup()
 {
 	ifstream input;
-    input.open("n.txt");
+    input.open("inp.txt");
     if(input.fail())
-        cout<<"why Failed!"<<endl;
+        cout<<"Failed!"<<endl;
     string value,seq[4], s1, s2, s3, s4;
 
     int c = 0,i;
